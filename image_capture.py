@@ -50,10 +50,11 @@ def keys_to_output(keys):
 
 
 def collect_frames():
-    filename = os.path.join('data', str(uuid.uuid1()))
+    # filename = os.path.join('data', str(uuid.uuid1()))
     gamecap = np.array(capture.grab(game_area))
+    gamecap_gray = cv2.cvtColor(gamecap, cv2.COLOR_RGBA2GRAY)
     # cv2.imwrite(f'{filename}.jpg', gamecap)
-    return gamecap
+    return gamecap_gray
 
 
 def collect_keys():
@@ -69,28 +70,30 @@ if __name__ == "__main__":
     np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
     data_train = []
     i = 0
-    paused=False
+    paused = False
     while True:
         if not paused:
-            time.sleep(0.1)
+            time.sleep(0.06)
             filename = os.path.join('data', 'data_train_{}'.format(i))
-            #time.sleep(1)
+            # time.sleep(1)
             data_x = collect_frames()
             data_y = collect_keys()
             data_train.append([data_x, data_y])
-            print('1')
             if len(data_train) % 100 == 0:
+                print('collecting {}...'.format(i))
+            if len(data_train) % 1000 == 0:
                 np.save(filename, data_train)
-                print('save successfully!')
+                print('{} save successfully!'.format(filename))
+                data_train = []
                 i += 1
 
-        keys=key_check()
+        keys = key_check()
         if 'T' in keys:
             if paused:
-                paused=False
+                paused = False
                 print('continue...')
                 time.sleep(1)
             else:
                 print('pauseing!')
-                paused=True
+                paused = True
                 time.sleep(1)
