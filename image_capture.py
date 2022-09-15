@@ -53,6 +53,7 @@ def collect_frames():
     # filename = os.path.join('data', str(uuid.uuid1()))
     gamecap = np.array(capture.grab(game_area))
     gamecap_gray = cv2.cvtColor(gamecap, cv2.COLOR_RGBA2GRAY)
+    #gamecap_gray=np.reshape(gamecap_gray,(1,)+gamecap_gray.shape)
     # cv2.imwrite(f'{filename}.jpg', gamecap)
     return gamecap_gray
 
@@ -67,6 +68,7 @@ def collect_keys():
 if __name__ == "__main__":
     # run some function here
     # collect_frames()
+    time.sleep(2)
     np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
     data_train = []
     i = 0
