@@ -72,6 +72,4 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 data/
-
-!/model_ep2_bc8
-!/model_ep5_bc8
+model/

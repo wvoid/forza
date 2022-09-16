@@ -1,9 +1,6 @@
-import time
 
 import numpy as np
-import cv2
 import torch
-from PIL import Image
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
 import model
@@ -40,7 +37,7 @@ if __name__ == '__main__':
     lean_rate=0.001
     loss=torch.nn.CrossEntropyLoss()
     optim=torch.optim.Adam(model_1.parameters(),lean_rate)
-    for epoch in range(3):
+    for epoch in range(2):
         print(f'epoch :{epoch }')
         total_train_step=0
         avg_loss=0
@@ -59,7 +56,7 @@ if __name__ == '__main__':
             if total_train_step%2==0:
                 print(f"total_train_step:{total_train_step},loss:{res_loss},avg_loss:{avg_loss/total_train_step}")
 
-    torch.save(model_1,'model_ep5_bc8')
+    torch.save(model_1, 'model/model_ep2_bc8')
     # cv2.imshow('1',x[44][0])
     # cv2.waitKey(0)
     # x=x/255

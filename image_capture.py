@@ -91,7 +91,7 @@ if __name__ == "__main__":
             y.append(data_y)
             if len(x) % 100 == 0:
                 print('collecting {}...'.format(i))
-            if len(x) % 3000 == 0:
+            if len(x) % 500 == 0:
                 np.savez(filename, image=x, label=y)
                 print('{} save successfully!'.format(filename))
                 x = []
