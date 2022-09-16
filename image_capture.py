@@ -3,9 +3,10 @@ import time
 from mss import mss
 import cv2 as cv2
 import numpy as np
-import uuid
 import os
 from getkeys import key_check
+from torchvision import transforms
+from PIL import Image
 
 w = [1, 0, 0, 0, 0, 0, 0, 0, 0]
 s = [0, 1, 0, 0, 0, 0, 0, 0, 0]
@@ -49,11 +50,15 @@ def keys_to_output(keys):
     return output
 
 
+pipe = transforms.Compose([transforms.CenterCrop([600, 1000]), transforms.Resize([224])])
+
+
 def collect_frames():
     # filename = os.path.join('data', str(uuid.uuid1()))
     gamecap = np.array(capture.grab(game_area))
     gamecap_gray = cv2.cvtColor(gamecap, cv2.COLOR_RGBA2GRAY)
-    #gamecap_gray=np.reshape(gamecap_gray,(1,)+gamecap_gray.shape)
+    gamecap_gray = pipe(Image.fromarray(gamecap_gray))
+    gamecap_gray = np.reshape(gamecap_gray, (1,) + np.array(gamecap_gray).shape)
     # cv2.imwrite(f'{filename}.jpg', gamecap)
     return gamecap_gray
 
@@ -61,7 +66,7 @@ def collect_frames():
 def collect_keys():
     keys = key_check()
     output = keys_to_output(keys)
-    return output
+    return np.array(output)
     # print(output)
 
 
@@ -70,23 +75,27 @@ if __name__ == "__main__":
     # collect_frames()
     time.sleep(2)
     np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
-    data_train = []
+    # data_train = []
+    x = []
+    y = []
     i = 0
     paused = False
     while True:
         if not paused:
-            time.sleep(0.06)
+            time.sleep(0.1)
             filename = os.path.join('data', 'data_train_{}'.format(i))
             # time.sleep(1)
             data_x = collect_frames()
             data_y = collect_keys()
-            data_train.append([data_x, data_y])
-            if len(data_train) % 100 == 0:
+            x.append(data_x)
+            y.append(data_y)
+            if len(x) % 100 == 0:
                 print('collecting {}...'.format(i))
-            if len(data_train) % 1000 == 0:
-                np.save(filename, data_train)
+            if len(x) % 3000 == 0:
+                np.savez(filename, image=x, label=y)
                 print('{} save successfully!'.format(filename))
-                data_train = []
+                x = []
+                y = []
                 i += 1
 
         keys = key_check()
