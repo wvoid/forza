@@ -40,7 +40,7 @@ if __name__ == '__main__':
     lean_rate=0.001
     loss=torch.nn.CrossEntropyLoss()
     optim=torch.optim.Adam(model_1.parameters(),lean_rate)
-    for epoch in range(5):
+    for epoch in range(3):
         print(f'epoch :{epoch }')
         total_train_step=0
         avg_loss=0
