@@ -73,3 +73,5 @@ fabric.properties
 
 data/
 
+!/model_ep2_bc8
+!/model_ep5_bc8
